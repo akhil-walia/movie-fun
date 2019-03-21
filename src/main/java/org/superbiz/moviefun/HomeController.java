@@ -18,21 +18,20 @@ import java.util.Map;
 @Controller
 public class HomeController {
 
-    public PlatformTransactionManager platformTransactionManagerForMovies;
-    public PlatformTransactionManager platformTransactionManagerForAlbums;
-
+    private  TransactionTemplate transactionTemplateAlbum;
+    private TransactionTemplate transactionTemplateMovie;
     private MoviesBean moviesBean;
     private AlbumsBean albumsBean;
     private MovieFixtures movieFixtures;
     private AlbumFixtures albumFixtures;
 
-    public HomeController(MoviesBean moviesBean, AlbumsBean albumsBean, MovieFixtures movieFixtures, AlbumFixtures albumFixtures, PlatformTransactionManager platformTransactionManagerForMovies, PlatformTransactionManager platformTransactionManagerForAlbums) {
+    public HomeController(MoviesBean moviesBean, AlbumsBean albumsBean, MovieFixtures movieFixtures, AlbumFixtures albumFixtures, TransactionTemplate transactionTemplateMovie, TransactionTemplate transactionTemplateAlbum) {
         this.moviesBean = moviesBean;
         this.albumsBean = albumsBean;
         this.movieFixtures = movieFixtures;
         this.albumFixtures = albumFixtures;
-        this.platformTransactionManagerForMovies = platformTransactionManagerForMovies;
-        this.platformTransactionManagerForAlbums = platformTransactionManagerForAlbums;
+        this.transactionTemplateMovie = transactionTemplateMovie;
+        this.transactionTemplateAlbum = transactionTemplateAlbum;
     }
 
     @GetMapping("/")
@@ -52,9 +51,9 @@ public class HomeController {
     }
 
     public void createMovies(){
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManagerForMovies);
 
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+        transactionTemplateMovie.execute(new TransactionCallbackWithoutResult() {
 
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                     for (Movie movie : movieFixtures.load()) {
@@ -65,9 +64,9 @@ public class HomeController {
     }
 
     public void createAlbums(){
-        TransactionTemplate transactionTemplate = new TransactionTemplate(platformTransactionManagerForAlbums);
 
-        transactionTemplate.execute(new TransactionCallbackWithoutResult() {
+
+        transactionTemplateAlbum.execute(new TransactionCallbackWithoutResult() {
 
             protected void doInTransactionWithoutResult(TransactionStatus status) {
                 for (Album album : albumFixtures.load()) {

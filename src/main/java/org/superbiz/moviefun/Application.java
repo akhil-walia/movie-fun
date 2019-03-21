@@ -18,6 +18,7 @@ import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.TransactionDefinition;
 import org.springframework.transaction.TransactionException;
 import org.springframework.transaction.TransactionStatus;
+import org.springframework.transaction.support.TransactionTemplate;
 
 import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
@@ -68,22 +69,22 @@ public class Application {
 
     @Bean
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBeanForMovies(DataSource movieDataSource, HibernateJpaVendorAdapter hibernateJpaVendorAdapter){
-        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        localContainerEntityManagerFactoryBean.setDataSource(movieDataSource);
-        localContainerEntityManagerFactoryBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
-        localContainerEntityManagerFactoryBean.setPackagesToScan("org.superbiz.moviefun.movies");
-        localContainerEntityManagerFactoryBean.setPersistenceUnitName("movies-mysql");
-        return localContainerEntityManagerFactoryBean;
+        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBeanForMovies = new LocalContainerEntityManagerFactoryBean();
+        localContainerEntityManagerFactoryBeanForMovies.setDataSource(movieDataSource);
+        localContainerEntityManagerFactoryBeanForMovies.setJpaVendorAdapter(hibernateJpaVendorAdapter);
+        localContainerEntityManagerFactoryBeanForMovies.setPackagesToScan("org.superbiz.moviefun.movies");
+        localContainerEntityManagerFactoryBeanForMovies.setPersistenceUnitName("movies-mysql");
+        return localContainerEntityManagerFactoryBeanForMovies;
     }
 
     @Bean
     public LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBeanForAlbums(DataSource albumsDataSource, HibernateJpaVendorAdapter hibernateJpaVendorAdapter){
-        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBean = new LocalContainerEntityManagerFactoryBean();
-        localContainerEntityManagerFactoryBean.setDataSource(albumsDataSource);
-        localContainerEntityManagerFactoryBean.setJpaVendorAdapter(hibernateJpaVendorAdapter);
-        localContainerEntityManagerFactoryBean.setPackagesToScan("org.superbiz.moviefun.albums");
-        localContainerEntityManagerFactoryBean.setPersistenceUnitName("albums-mysql");
-        return localContainerEntityManagerFactoryBean;
+        LocalContainerEntityManagerFactoryBean localContainerEntityManagerFactoryBeanForAlbums = new LocalContainerEntityManagerFactoryBean();
+        localContainerEntityManagerFactoryBeanForAlbums.setDataSource(albumsDataSource);
+        localContainerEntityManagerFactoryBeanForAlbums.setJpaVendorAdapter(hibernateJpaVendorAdapter);
+        localContainerEntityManagerFactoryBeanForAlbums.setPackagesToScan("org.superbiz.moviefun.albums");
+        localContainerEntityManagerFactoryBeanForAlbums.setPersistenceUnitName("albums-mysql");
+        return localContainerEntityManagerFactoryBeanForAlbums;
     }
 
     @Bean
@@ -96,5 +97,15 @@ public class Application {
     public PlatformTransactionManager platformTransactionManagerForAlbums(EntityManagerFactory localContainerEntityManagerFactoryBeanForAlbums) {
 
         return new JpaTransactionManager(localContainerEntityManagerFactoryBeanForAlbums);
+    }
+
+    @Bean
+    public TransactionTemplate transactionTemplateAlbum(PlatformTransactionManager platformTransactionManagerForAlbums){
+        return  new TransactionTemplate(platformTransactionManagerForAlbums);
+    }
+
+    @Bean
+    public TransactionTemplate transactionTemplateMovie(PlatformTransactionManager platformTransactionManagerForMovies){
+        return  new TransactionTemplate(platformTransactionManagerForMovies);
     }
 }
