@@ -46,6 +46,6 @@ public class FileStore implements BlobStore {
 
     @Override
     public void deleteAll() {
-        File cover = new File("");
+        //
     }
 }
