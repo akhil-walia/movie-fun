@@ -15,7 +15,6 @@ import java.util.Optional;
 
 import static java.lang.ClassLoader.getSystemResource;
 
-@Component
 public class FileStore implements BlobStore {
 
     @Override
@@ -47,6 +46,6 @@ public class FileStore implements BlobStore {
 
     @Override
     public void deleteAll() {
-        // ...
+        File cover = new File("");
     }
 }
